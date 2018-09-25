@@ -1,8 +1,6 @@
-// assumption.cpp : Defines the entry point for the console application.
-//
+#include "assumption.h"
 
-int _tmain(int argc, _TCHAR* argv[])
-{
-	return 0;
+int wmain(int argc, wchar_t** argw) {
+  ::testing::InitGoogleMock(&argc, argw);
+  return RUN_ALL_TESTS();
 }
-
