@@ -1,0 +1,6 @@
+bin_PROGRAMS = assumption
+
+AM_CXXFLAGS = $(INTI_CFLAGS)
+
+assumption_SOURCES = assumption.cpp test.cpp assumption.h interfaces.h
+assumption_LDADD = $(INTI_LIBS)
