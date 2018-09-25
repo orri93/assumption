@@ -1,0 +1,6 @@
+/[Dd]ebug/
+/[Rr]elease/
+/packages/
+/*.v12.suo
+/*.opensdf
+/*.sdf

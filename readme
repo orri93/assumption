@@ -1,0 +1,50 @@
+Information regarding the assumption solution
+===============================================================================
+
+Coding style
+===============================================================================
+Google C++ Style Guide (https://google.github.io/styleguide/cppguide.html)
+
+
+Code quality 
+===============================================================================
+Google Test (https://github.com/google/googletest)
+Google Mock (https://github.com/google/googletest)
+
+Visual Studio C++ 2013 Project Properties
+===============================================================================
+User Macros (Will only display under 'Common Properties' in property sheet)
+-------------------------------------------------------------------------------
+AssumptionSource $(SolutionDir)cpp
+AssumptionInclude $(AssumptionSource)
+BoostInclude $(BOOST_32B_PATH)
+BoostLibraryPath $(BOOST_32B_PATH)\lib32-msvc-12.0
+GoogleTestInclude $(GOOGLE_TEST_PATH)\include
+GoogleTestStaticDebugLibraryPath $(GOOGLE_TEST_PATH)\vs12\debug\static\b32\lib
+GoogleTestStaticReleaseLibraryPath $(GOOGLE_TEST_PATH)\vs12\release\static\b32\lib
+GoogleTestSharedDebugLibraryPath $(GOOGLE_TEST_PATH)\vs12\debug\shared\crt\b32\lib
+GoogleTestSharedReleaseLibraryPath $(GOOGLE_TEST_PATH)\vs12\release\shared\crt\b32\lib
+GoogleTestLibrary gtest.lib
+GoogleTestMainLibrary gtest_main.lib
+GoogleMockLibrary gmock.lib
+GoogleMockMainLibrary gmock_main.lib
+
+Additional Include Directories
+-------------------------------------------------------------------------------
+$(GoogleTestInclude)
+$(BoostInclude)
+
+Additional Library Directories
+-------------------------------------------------------------------------------
+$(BoostLibraryPath)
+$(GoogleTestStaticDebugLibraryPath)
+$(GoogleTestStaticReleaseLibraryPath)
+$(GoogleTestSharedDebugLibraryPath)
+$(GoogleTestSharedReleaseLibraryPath)
+
+Additional Dependencies
+-------------------------------------------------------------------------------
+$(GoogleTestLibrary)
+$(GoogleTestMainLibrary)
+$(GoogleMockLibrary)
+$(GoogleMockMainLibrary)
