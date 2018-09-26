@@ -5,9 +5,9 @@ project(${CMAKE_PROJECT_NAME}_tests)
 set(GOOGLETEST_DIR /opt/googletest/lib)
 set(GOOGLETEST_INCLUDE /opt/googletest/include)
 
-add_subdirectory(${GOOGLETEST_INCLUDE})
+#add_subdirectory(${GOOGLETEST_INCLUDE})
 
-include_directories(${GOOGLETEST_INCLUDE}
+include_directories(${GOOGLETEST_INCLUDE})
 
 add_executable(Unit_Test_run
   test.cpp
