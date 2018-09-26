@@ -1,6 +1,4 @@
-bin_PROGRAMS = assumption
+# For using custom m4 macros
 
-AM_CXXFLAGS = $(INTI_CFLAGS)
+SUBDIR = src tests
 
-assumption_SOURCES = assumption.cpp test.cpp assumption.h interfaces.h
-assumption_LDADD = $(INTI_LIBS)

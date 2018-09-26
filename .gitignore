@@ -1,6 +1,8 @@
 /[Dd]ebug*/
 /[Rr]elease*/
 /packages/
+/autom4te.cache/
 /*.v12.suo
 /*.opensdf
 /*.sdf
+/.~lock.*#
