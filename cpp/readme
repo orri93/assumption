@@ -11,6 +11,11 @@ Code quality
 Google Test (https://github.com/google/googletest)
 Google Mock (https://github.com/google/googletest)
 
+Auto-tools Properties
+===============================================================================
+
+
+
 Visual Studio C++ 2013 Project Properties
 ===============================================================================
 User Macros (Will only display under 'Common Properties' in property sheet)
