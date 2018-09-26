@@ -1,0 +1,33 @@
+﻿Assumption Auto-tools build information
+=======================================
+
+Instruction to build the assumption fixtures with the auto-tools
+
+ssh://orri@gos.sagos.is:22/home/git/assumption
+
+Depends
+-------
+
+- C++ compiler
+- Autoconf
+- Automake
+- Libtool
+
+Build
+-----
+
+Generate all the necessary build scripts by running
+
+    autoreconf -ivf
+
+With these in place then
+
+    ./configure
+    make
+
+Run the tests with
+
+    make check
+
+Author: Geirmundur Orri Sigurdsson <orri@icesoft.is>
+26 September 2018
