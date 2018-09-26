@@ -1,6 +1,7 @@
 #include "assumption.h"
 
 #include <memory>
+#include <functional>
 
 #define _GOS_ASSUMPTION_TEST_EXPECTED_BOOL_SIZE 1
 #define _GOS_ASSUMPTION_TEST_EXPECTED_FLOAT_SIZE 4
@@ -115,6 +116,21 @@ TEST(assumption, reference)
   EXPECT_DOUBLE_EQ(10.1, abc.value());
 }
 
+typedef gos::assumption::Wrapper<float> FloatWrapper;
+typedef gos::assumption::ArrayHolder<FloatWrapper> FloatHolder;
+typedef gos::assumption::Assumption<float, FloatWrapper, FloatHolder>
+ FloatWrapperHolderAssumption;
+
+void CreateUnique(
+  FloatWrapperHolderAssumption& assumption,
+  FloatWrapperHolderAssumption::Array& assumptionarray,
+  FloatWrapperHolderAssumption::WrapperArray& wrapperarray,
+  FloatWrapperHolderAssumption::HolderPtr& holder
+  )
+{
+  assumption.unique(assumptionarray, wrapperarray, holder);
+}
+
 TEST(assumption, unique)
 {
   typedef float Value;
@@ -122,12 +138,9 @@ TEST(assumption, unique)
   typedef StringHolderInterface* StringHolderInterfacePtr;
   typedef std::unique_ptr<StringHolderInterface> StringUniquePtr;
   typedef gos::assumption::StringHolder StringHolder;
-  typedef gos::assumption::Wrapper<Value> Wrapper;
-  typedef gos::assumption::ArrayHolder<Wrapper> Holder;
-  typedef gos::assumption::Assumption<Value, Wrapper, Holder> Assumption;
-  typedef Assumption::Array Array;
-  typedef Assumption::WrapperArray WrapperArray;
-  typedef Assumption::HolderPtr HolderPtr;
+  typedef FloatWrapperHolderAssumption::Array Array;
+  typedef FloatWrapperHolderAssumption::WrapperArray WrapperArray;
+  typedef FloatWrapperHolderAssumption::HolderPtr HolderPtr;
 
   const char* const Text = "Text";
   StringUniquePtr first, second, fourth;
@@ -152,16 +165,17 @@ TEST(assumption, unique)
   EXPECT_FALSE(fourth);
   EXPECT_EQ(nullptr, third);
 
-  Array a;
-  WrapperArray wrapper_array;
+  Array assumptionarray;
+  WrapperArray wrapperarray;
   HolderPtr holder;
-  Assumption assumption;
+  FloatWrapperHolderAssumption assumption;
 
-  assumption.unique(a, wrapper_array, holder);
+  CreateUnique(assumption, assumptionarray, wrapperarray, holder);
+
   // Expect the pointers to be unset because it has been moved into theres maps
   EXPECT_FALSE((bool)holder);
-  EXPECT_FALSE((bool)wrapper_array);
-  EXPECT_FALSE((bool)a);
+  EXPECT_FALSE((bool)wrapperarray);
+  EXPECT_FALSE((bool)assumptionarray);
 
   // Test access to items
   EXPECT_TRUE(assumption.has(assumption.UniqueId));
@@ -171,12 +185,12 @@ TEST(assumption, unique)
   EXPECT_EQ(float(), v);
 
   // Access to a wrapper (with an id and index)
-  Wrapper& w = assumption.wrapper(assumption.UniqueId, 4);
+  FloatWrapper& w = assumption.wrapper(assumption.UniqueId, 4);
   EXPECT_FALSE(w.is_set());
   EXPECT_EQ(float(), w.value());
 
   // Access to array holder
-  Holder& h = assumption.holder(assumption.UniqueId);
+  FloatHolder& h = assumption.holder(assumption.UniqueId);
   EXPECT_EQ(assumption.ArraySize, h.size());
   w = h.get(0);
   EXPECT_FALSE(w.is_set());
@@ -184,3 +198,24 @@ TEST(assumption, unique)
   EXPECT_EQ(float(), w.value());  // Should be equal to 0.0f
 }
 
+TEST(assumption, functional)
+{
+  typedef FloatWrapperHolderAssumption::Array Array;
+  typedef FloatWrapperHolderAssumption::WrapperArray WrapperArray;
+  typedef FloatWrapperHolderAssumption::HolderPtr HolderPtr;
+  
+  Array assumptionarray;
+  WrapperArray wrapperarray;
+  HolderPtr holder;
+  FloatWrapperHolderAssumption assumption;
+
+  CreateUnique(assumption, assumptionarray, wrapperarray, holder);
+
+  std::bind bind = std::bind(
+    &FloatWrapperHolderAssumption::has,
+    &assumption,
+    std::placeholders::_1
+    );
+  auto result = bind(assumption.UniqueId);
+  EXPECT_TRUE(result);
+}

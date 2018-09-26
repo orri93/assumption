@@ -293,15 +293,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="assumption.cpp" />
-    <ClCompile Include="test.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="assumption.h" />
-    <ClInclude Include="interfaces.h" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\assumption.h" />
+    <ClInclude Include="include\interfaces.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\assumption.cpp" />
+    <ClCompile Include="tests\test.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
