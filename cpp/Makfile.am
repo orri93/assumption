@@ -1,4 +1,4 @@
 # For using custom m4 macros
 
-SUBDIR = src tests
+SUBDIR = src tests include
 
