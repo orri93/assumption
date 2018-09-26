@@ -219,3 +219,4 @@ TEST(assumption, functional)
   auto result = bind(assumption.UniqueId);
   EXPECT_TRUE(result);
 }
+

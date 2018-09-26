@@ -87,3 +87,4 @@ public:
 } /* namespace gos */
 
 #endif /* _GOS_ASSUMPTION_INTERFACES_H_ */
+

@@ -275,3 +275,4 @@ private:
 } /* namespace gos */
 
 #endif /* _GOS_ASSUMPTION_H_ */
+
