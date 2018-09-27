@@ -3,8 +3,11 @@
 /packages/
 /CMakeFiles/
 /autom4te.cache/
+/googletest-build/
+/googletest-download/
+/googletest-src/
 /cmake-build-debug/
-/CMakeCache.txt
+/DartConfiguration.tcl/CMakeCache.txt
 /cmake_install.cmake
 /*.v12.suo
 /*.opensdf
