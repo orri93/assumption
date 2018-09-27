@@ -20,6 +20,16 @@ Generate all the necessary build scripts by running
 
     autoreconf -ivf
 
+       -i, --install
+              copy missing auxiliary files
+
+       -i, --install
+              copy missing auxiliary files
+
+       -v, --verbose
+              verbosely report processing
+
+
 With these in place then
 
     ./configure

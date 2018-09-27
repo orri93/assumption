@@ -1,4 +1,0 @@
-# For using custom m4 macros
-
-SUBDIR = src tests include
-
