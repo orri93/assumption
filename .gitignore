@@ -3,6 +3,7 @@
 /packages/
 /CMakeFiles/
 /autom4te.cache/
+/cmake-build-debug/
 /CMakeCache.txt
 /cmake_install.cmake
 /*.v12.suo
