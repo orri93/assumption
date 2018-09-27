@@ -1,7 +1,10 @@
 /[Dd]ebug*/
 /[Rr]elease*/
 /packages/
+/CMakeFiles/
 /autom4te.cache/
+/CMakeCache.txt
+/cmake_install.cmake
 /*.v12.suo
 /*.opensdf
 /*.sdf

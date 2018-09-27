@@ -1,5 +1,6 @@
 /[Dd]ebug*/
 /[Rr]elease*/
 /CMakeFiles/
-/CMakeCache.txt
 /*.user
+/cmake_install.cmake
+/Makefile
