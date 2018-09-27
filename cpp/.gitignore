@@ -3,4 +3,5 @@
 /CMakeFiles/
 /*.user
 /cmake_install.cmake
+/CMakeCache.txt
 /Makefile
