@@ -220,7 +220,7 @@ TEST(assumption, functional)
 
   CreateUnique(assumption, assumptionarray, wrapperarray, holder);
 
-  std::bind bind = std::bind(
+  auto bind = std::bind(
     &FloatWrapperHolderAssumption::has,
     &assumption,
     std::placeholders::_1
