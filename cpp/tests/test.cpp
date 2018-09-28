@@ -116,7 +116,6 @@ TEST(assumption, reference)
   EXPECT_DOUBLE_EQ(10.1, abc.value());
 }
 
-#ifdef _WIN32
 typedef gos::assumption::Wrapper<float> FloatWrapper;
 typedef gos::assumption::ArrayHolder<FloatWrapper> FloatHolder;
 typedef gos::assumption::Assumption<float, FloatWrapper, FloatHolder>
@@ -131,24 +130,17 @@ void CreateUnique(
 {
   assumption.unique(assumptionarray, wrapperarray, holder);
 }
-#endif
 
-#ifdef _WIN32
 TEST(assumption, unique)
-#else
-TEST(assumption, DISABLED_unique)
-#endif
 {
   typedef float Value;
   typedef gos::interfaces::StringHolder StringHolderInterface;
   typedef StringHolderInterface* StringHolderInterfacePtr;
   typedef std::unique_ptr<StringHolderInterface> StringUniquePtr;
   typedef gos::assumption::StringHolder StringHolder;
-#ifdef _WIN32
   typedef FloatWrapperHolderAssumption::Array Array;
   typedef FloatWrapperHolderAssumption::WrapperArray WrapperArray;
   typedef FloatWrapperHolderAssumption::HolderPtr HolderPtr;
-#endif
 
   const char* const Text = "Text";
   StringUniquePtr first, second, fourth;
@@ -173,7 +165,6 @@ TEST(assumption, DISABLED_unique)
   EXPECT_FALSE(fourth);
   EXPECT_EQ(nullptr, third);
 
-#ifdef _WIN32
   Array assumptionarray;
   WrapperArray wrapperarray;
   HolderPtr holder;
@@ -205,10 +196,8 @@ TEST(assumption, DISABLED_unique)
   EXPECT_FALSE(w.is_set());
   EXPECT_EQ(0.0f, w.value());
   EXPECT_EQ(float(), w.value());  // Should be equal to 0.0f
-#endif
 }
 
-#ifdef _WIN32
 TEST(assumption, functional)
 {
   typedef FloatWrapperHolderAssumption::Array Array;
@@ -230,5 +219,3 @@ TEST(assumption, functional)
   auto result = bind(assumption.UniqueId);
   EXPECT_TRUE(result);
 }
-#endif
-
