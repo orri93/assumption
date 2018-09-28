@@ -1,0 +1,24 @@
+[==========] Running 8 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 8 tests from assumption
+[ RUN      ] assumption.size
+[       OK ] assumption.size (0 ms)
+[ RUN      ] assumption.construction
+[       OK ] assumption.construction (0 ms)
+[ RUN      ] assumption.defaulting
+[       OK ] assumption.defaulting (0 ms)
+[ RUN      ] assumption.moving
+[       OK ] assumption.moving (0 ms)
+[ RUN      ] assumption.entrust
+[       OK ] assumption.entrust (0 ms)
+[ RUN      ] assumption.reference
+[       OK ] assumption.reference (0 ms)
+[ RUN      ] assumption.unique
+[       OK ] assumption.unique (0 ms)
+[ RUN      ] assumption.functional
+[       OK ] assumption.functional (0 ms)
+[----------] 8 tests from assumption (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 8 tests from 1 test case ran. (0 ms total)
+[  PASSED  ] 8 tests.
