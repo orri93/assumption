@@ -1,9 +1,6 @@
 project(assumption_tests)
 
-set(CMAKE_CXX_STANDARD 11)
-
 include_directories("../include")
-
 
 include(CTest)
 
@@ -38,6 +35,13 @@ endif()
 
 # Trivial example using gtest and gmock
 add_executable(assumption_tests test.cpp)
+
+set_target_properties(assumption_tests PROPERTIES
+  CXX_STANDARD 14
+  CXX_STANDARD_REQUIRED YES
+  CXX_EXTENSIONS NO
+)
+
 target_link_libraries(assumption_tests gtest gmock_main)
 add_test(NAME assumption_tests_test COMMAND assumption_tests)
 

@@ -144,9 +144,11 @@ TEST(assumption, DISABLED_unique)
   typedef StringHolderInterface* StringHolderInterfacePtr;
   typedef std::unique_ptr<StringHolderInterface> StringUniquePtr;
   typedef gos::assumption::StringHolder StringHolder;
+#ifdef _WIN32
   typedef FloatWrapperHolderAssumption::Array Array;
   typedef FloatWrapperHolderAssumption::WrapperArray WrapperArray;
   typedef FloatWrapperHolderAssumption::HolderPtr HolderPtr;
+#endif
 
   const char* const Text = "Text";
   StringUniquePtr first, second, fourth;
