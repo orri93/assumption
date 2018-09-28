@@ -28,6 +28,8 @@
 #define _GOS_ASSUMPTION_SET_CHECK_WITH_VARIABLE_
 //#define _GOS_ASSUMPTION_SET_CHECK_FROM_DEFAULT_
 
+//#define _GOS_ASSUMPTION_COUT_
+
 /* https://google.github.io/styleguide/cppguide.html#Variable_Names */
 
 namespace gos
@@ -91,7 +93,9 @@ public:
   {}
   ~Wrapper()
   {
+#ifdef _GOS_ASSUMPTION_COUT_
     std::cout << "Cleaning up a wrapper" << std::endl;
+#endif
   }
   //! Access to a constant reference to the wrapped object
   const T& value() const { return this->value_; }
@@ -153,7 +157,9 @@ public:
   }
   ~ArrayHolder()
   {
+#ifdef _GOS_ASSUMPTION_COUT_
     std::cout << "Cleaning up an array holder" << std::endl;
+#endif
   }
   //! Access a reference to an item by index
   T& get(const Index& index)
