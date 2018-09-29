@@ -72,9 +72,17 @@ public:
   virtual ~PointerHolder() {}
   //! Access to a copy of the contained object
   virtual T value() = 0;
-  //! Access to a reference to the contained object
+  //! Access to a reference of the contained object
   virtual T& reference() = 0;
-  //! Access to a raw pointer to the contained object
+  //! Access to a raw pointer of the contained object
+  virtual T* pointer() = 0;
+};
+
+template<typename T> class RawPointerHolder
+{
+public:
+  virtual ~RawPointerHolder() {}
+  //! Access to a raw pointer of the contained object
   virtual T* pointer() = 0;
 };
 

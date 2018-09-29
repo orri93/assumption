@@ -214,12 +214,31 @@ public:
   /*! This will only work if the contained object implements
    *  a copy constructor */
   T value() { return *this->pointer_; }
-  //! Access to a reference to the contained object
+  //! Access to a reference of the contained object
   T& reference() { return *this->pointer_; }
-  //! Access to a raw pointer to the contained object
+  //! Access to a raw pointer of the contained object
   T* pointer() { return this->pointer_; }
 private:
   Pointer pointer_;
+};
+
+//! A simple raw pointer holder class
+template<typename T> class RawPointerHolder :
+  public gos::interfaces::RawPointerHolder<T>
+{
+public:
+  //! A type for a unique pointer
+  typedef T* Pointer;
+  RawPointerHolder(const Pointer& pointer) :
+    raw_(pointer)
+  {}
+  //! Access to a raw pointer of the contained object
+  Pointer pointer()
+  {
+    return this->raw_;
+  }
+private:
+  Pointer raw_;
 };
 
 //! A simple constant holder class

@@ -198,6 +198,58 @@ TEST(assumption, unique)
   EXPECT_EQ(float(), w.value());  // Should be equal to 0.0f
 }
 
+TEST(assumption, the_void)
+{
+  typedef gos::interfaces::RawPointerHolder<void> Interface;
+  typedef gos::assumption::RawPointerHolder<void> Holder;
+  typedef Holder::Pointer Pointer;
+  typedef int A;
+  typedef double B;
+  typedef std::string C;
+
+  const A ca = 10;
+  const B cb = 20.0;
+  const C cc = "A string";
+
+  A a = ca;
+  B b = cb;
+  C c = cc;
+
+  Pointer pa, pb, pc;
+
+  pa = (Pointer)(&a);
+  EXPECT_TRUE(pa != nullptr);
+  pb = (Pointer)(&b);
+  EXPECT_TRUE(pb != nullptr);
+  pc = (Pointer)(&c);
+  EXPECT_TRUE(pc != nullptr);
+
+  Holder ha(pa);
+  Holder hb(pb);
+  Holder hc(pc);
+
+  Interface& ia = ha;
+  Interface& ib = hb;
+  Interface& ic = hc;
+
+  void* rpa = ia.pointer();
+  EXPECT_TRUE(rpa != nullptr);
+  void* rpb = ib.pointer();
+  EXPECT_TRUE(rpb != nullptr);
+  void* rpc = ic.pointer();
+  EXPECT_TRUE(rpc != nullptr);
+
+  A* cpa = static_cast<A*>(rpa);
+  EXPECT_TRUE(cpa != nullptr);
+  EXPECT_EQ(ca, *cpa);
+  B* cpb = static_cast<B*>(rpb);
+  EXPECT_TRUE(cpb != nullptr);
+  EXPECT_EQ(cb, *cpb);
+  C* cpc = static_cast<C*>(rpc);
+  EXPECT_TRUE(cpc != nullptr);
+  EXPECT_EQ(cc, *cpc);
+}
+
 TEST(assumption, functional)
 {
   typedef FloatWrapperHolderAssumption::Array Array;

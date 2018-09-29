@@ -1,6 +1,7 @@
 /[Dd]ebug*/
 /[Rr]elease*/
 /CMakeFiles/
+/x64/
 /googletest-build/
 /googletest-download/
 /googletest-src/
