@@ -25,13 +25,31 @@ public:
   virtual const bool is_set() const = 0;
 };
 
-//! A simple holder interface
-template<typename T> class Holder
+//! A copyable value holder interface
+/*!
+ */
+template<typename T> class CopyableHolder
 {
 public:
-  virtual ~Holder() {}
+  virtual ~CopyableHolder() {}
+  //! Copy access
+  virtual T value() = 0;
+};
+
+//! A referecnable value holder interface
+template<typename T> class ReferencableHolder
+{
+public:
+  virtual ~ReferencableHolder() {}
   //! Access to a reference of the contained value
   virtual T& reference() = 0;
+};
+
+//! A pointer access holder interface
+template<typename T> class PointeredHolder
+{
+public:
+  virtual ~PointeredHolder() {}
   //! Access to a raw pointer to the contained value
   virtual T* pointer() = 0;
 };
@@ -65,19 +83,7 @@ public:
   virtual const std::string text() const = 0;
 };
 
-//! A simple pointer holder interface
-template<typename T> class PointerHolder
-{
-public:
-  virtual ~PointerHolder() {}
-  //! Access to a copy of the contained object
-  virtual T value() = 0;
-  //! Access to a reference of the contained object
-  virtual T& reference() = 0;
-  //! Access to a raw pointer of the contained object
-  virtual T* pointer() = 0;
-};
-
+//! A raw pointer holder
 template<typename T> class RawPointerHolder
 {
 public:

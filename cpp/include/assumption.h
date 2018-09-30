@@ -27,6 +27,7 @@
 
 #define _GOS_ASSUMPTION_SET_CHECK_WITH_VARIABLE_
 //#define _GOS_ASSUMPTION_SET_CHECK_FROM_DEFAULT_
+#define _GOS_ASSUMPTION_COMPARE_WITH_FRIEND_
 
 //#define _GOS_ASSUMPTION_COUT_
 
@@ -97,6 +98,36 @@ public:
     std::cout << "Cleaning up a wrapper" << std::endl;
 #endif
   }
+  Wrapper& operator= (const Wrapper& wrapper)
+  {
+    if (this != &wrapper)
+    {
+      this->value_ = wrapper.value_;
+#if defined(_GOS_ASSUMPTION_SET_CHECK_WITH_VARIABLE_)
+      this->is_set_ = wrapper.is_set_;
+#endif
+    }
+    return *this;
+  }
+#ifdef _GOS_ASSUMPTION_COMPARE_WITH_FRIEND_
+  friend bool operator==(const Wrapper& w1, const Wrapper& w2)
+  {
+#if defined(_GOS_ASSUMPTION_SET_CHECK_WITH_VARIABLE_)
+    return w1.value_ == w2.value_ && w1.is_set_ == w2.is_set_;
+#else
+    return w1.value_ == w2.value_;
+#endif
+  }
+#else
+  bool operator==(const Wrapper<T>& wrapper) const
+  {
+#if defined(_GOS_ASSUMPTION_SET_CHECK_WITH_VARIABLE_)
+    return this->value_ == wrapper.value_ && this->is_set_ == wrapper.is_set_;
+#else
+    return this->value_ == wrapper.value_;
+#endif
+  }
+#endif
   //! Access to a constant reference to the wrapped object
   const T& value() const { return this->value_; }
   //! Checks if the wrapper is holding an object (is set or not)
@@ -110,7 +141,11 @@ public:
     return this->value_ != T();
 #endif
   }
+#ifdef _GOS_ASSUMPTION_COMPARE_WITH_FRIEND_
+protected:
+#else
 private:
+#endif
 #if defined(_GOS_ASSUMPTION_SET_CHECK_WITH_VARIABLE_)
   bool is_set_;
 #endif
@@ -120,7 +155,9 @@ private:
 
 //! A simple holder class
 template<typename T> class Holder :
-  public gos::interfaces::Holder<T>
+  public gos::interfaces::CopyableHolder<T>,
+  public gos::interfaces::ReferencableHolder<T>,
+  public gos::interfaces::PointeredHolder<T>
 {
 public:
   //! A type for a unique pointer to the contained value
@@ -199,7 +236,9 @@ private:
 
 //! A simple pointer holder class
 template<typename T> class PointerHolder :
-  public gos::interfaces::PointerHolder<T>
+  public gos::interfaces::CopyableHolder<T>,
+  public gos::interfaces::ReferencableHolder<T>,
+  public gos::interfaces::PointeredHolder<T>
 {
 public:
   //! A type for a unique pointer
@@ -239,6 +278,12 @@ public:
   }
 private:
   Pointer raw_;
+};
+
+template<typename T> class DefaultingHolder : Holder<T>
+{
+public:
+  DefaultingHolder() : Holder(default(T)) {}
 };
 
 //! A simple constant holder class

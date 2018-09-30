@@ -43,7 +43,7 @@ TEST(assumption, defaulting)
 TEST(assumption, moving)
 {
   typedef gos::assumption::Wrapper<double> Wrapper;
-  typedef gos::interfaces::Holder<Wrapper> Interface;
+  typedef gos::interfaces::ReferencableHolder<Wrapper> Interface;
   typedef gos::assumption::Holder<Wrapper> Holder;
   typedef std::unique_ptr<Interface> HolderPtr;
 
@@ -82,9 +82,9 @@ TEST(assumption, entrust)
   typedef gos::interfaces::Wrapper<std::string> WrapperInterface;
   typedef std::unique_ptr<WrapperInterface> WrapperPtr;
   typedef gos::assumption::Wrapper<std::string> Wrapper;
-  typedef gos::interfaces::Holder<WrapperInterface> HolderInterface;
+  typedef gos::interfaces::ReferencableHolder<WrapperInterface> HolderFlavor;
   typedef gos::assumption::Holder<WrapperInterface> Holder;
-  typedef std::unique_ptr<HolderInterface> HolderPtr;
+  typedef std::unique_ptr<HolderFlavor> HolderPtr;
 
   const char* const Text = "Text";
   WrapperPtr a, b;
@@ -270,4 +270,42 @@ TEST(assumption, functional)
     );
   auto result = bind(assumption.UniqueId);
   EXPECT_TRUE(result);
+}
+
+template<typename T> class DefaultingHolder :
+public gos::interfaces::ReferencableHolder<T>
+{
+public:
+  virtual ~DefaultingHolder() {}
+};
+
+TEST(assumption, null)
+{
+  typedef int Integer;
+  typedef double Double;
+  typedef gos::assumption::Wrapper<Double> DoubleWrapper;
+  typedef DefaultingHolder<Integer> IntegerInterface;
+  typedef DefaultingHolder<Double> DoubleInterface;
+  typedef DefaultingHolder<DoubleWrapper> WrapperInteface;
+  typedef gos::assumption::DefaultingHolder<Integer> IntegerHolder;
+  typedef gos::assumption::DefaultingHolder<Double> DoubleHolder;
+  typedef gos::assumption::DefaultingHolder<DoubleWrapper>  WrapperHolder;
+
+  Integer i = Integer();  // a should be zero
+  EXPECT_EQ(Integer(), i);
+  EXPECT_EQ(0, i);
+
+  Double d = Double();    // d should be 0.0
+  EXPECT_DOUBLE_EQ(Double(), d);
+  EXPECT_DOUBLE_EQ(0.0, d);
+
+  /* 
+   * The wrapper must have a default constructor
+   * Wrapped value should be zero as the implementation of the wrapper will
+   * default its wrapped item
+   */
+  DoubleWrapper w = DoubleWrapper();
+  EXPECT_DOUBLE_EQ(Double(), w.value());
+  EXPECT_EQ(DoubleWrapper(), w);
+
 }
