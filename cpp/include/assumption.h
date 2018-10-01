@@ -283,7 +283,7 @@ private:
 template<typename T> class DefaultingHolder : Holder<T>
 {
 public:
-  DefaultingHolder() : Holder(default(T)) {}
+  DefaultingHolder() : Holder(T()) {}
 };
 
 //! A simple constant holder class
