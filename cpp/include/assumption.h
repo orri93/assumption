@@ -280,7 +280,8 @@ private:
   Pointer raw_;
 };
 
-template<typename T> class DefaultingHolder : Holder<T>
+template<typename T>
+class DefaultingHolder : public gos::interfaces::ReferencableHolder<T>
 {
 public:
   DefaultingHolder() : Holder(T()) {}
