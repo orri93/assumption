@@ -272,6 +272,7 @@ TEST(assumption, functional)
   EXPECT_TRUE(result);
 }
 
+//! The defaulting holder interface
 template<typename T> class DefaultingHolder :
 public gos::interfaces::ReferencableHolder<T>
 {
