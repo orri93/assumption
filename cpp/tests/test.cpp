@@ -198,6 +198,39 @@ TEST(assumption, unique)
   EXPECT_EQ(float(), w.value());  // Should be equal to 0.0f
 }
 
+TEST(assumption, uniquearray)
+{
+  typedef float Value;
+  typedef std::unique_ptr<Value[]> ValueArray;
+
+  const size_t Size = 10;
+
+  float* p;
+
+  ValueArray a = std::make_unique<Value[]>(Size);
+  EXPECT_TRUE((bool)a);
+  ::memset(a.get(), 0, Size * sizeof(Value));
+  for (size_t i = 0; i < Size; i++)
+  {
+    EXPECT_FLOAT_EQ(Value(), a[i]);
+  }
+  
+  float x = 41.12f, y = 45.32f, z = 212.22f;
+
+  a[0] = x;
+  a[1] = y;
+  a[2] = z;
+  EXPECT_FLOAT_EQ(x, a[0]);
+  EXPECT_FLOAT_EQ(y, a[1]);
+  EXPECT_FLOAT_EQ(z, a[2]);
+  p = a.get();
+  EXPECT_FLOAT_EQ(x, *p);
+  p++;
+  EXPECT_FLOAT_EQ(y, *p);
+  p = &a[2];
+  EXPECT_FLOAT_EQ(z, *p);
+}
+
 TEST(assumption, the_void)
 {
   typedef gos::interfaces::RawPointerHolder<void> Interface;
@@ -270,6 +303,11 @@ TEST(assumption, functional)
     );
   auto result = bind(assumption.UniqueId);
   EXPECT_TRUE(result);
+}
+
+TEST(assumption, lambdas)
+{
+
 }
 
 //! The defaulting holder interface
