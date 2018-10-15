@@ -58,6 +58,7 @@ TEST(boost_assumption, spirit_endian)
   char* spy;
   Buffer buffer = std::make_unique<char[]>(size);
 
+  Value* vp;
   Value f1 = 0.12f, f2 = 3.45f, f3 = 6.78f, x = 0.0f;
   Value a[count] { f1, f2, f3 };
 
@@ -102,8 +103,8 @@ TEST(boost_assumption, spirit_endian)
   EXPECT_EQ(size, (size_t)(spy - buffer.get()));
   for (size_t i = 0; i < count; i++)
   {
-    spy = buffer.get() + i * sizeof(Value);
-    EXPECT_FALSE(::abs(loaded[i] - *spy) < 0.0000001);
+    vp = loaded + i;
+    EXPECT_FALSE(::abs(*vp - a[i]) < 0.0000001);
     EXPECT_FALSE(::abs(loaded[i] - a[i]) < 0.0000001);
   }
 
@@ -112,8 +113,8 @@ TEST(boost_assumption, spirit_endian)
   EXPECT_EQ(size, (size_t)(spy - buffer.get()));
   for (size_t i = 0; i < count; i++)
   {
-    spy = buffer.get() + i * sizeof(Value);
-    EXPECT_TRUE(::abs(loaded[i] - *spy) < 0.0000001);
+    vp = loaded + i;
+    EXPECT_TRUE(::abs(*vp - a[i]) < 0.0000001);
     EXPECT_TRUE(::abs(loaded[i] - a[i]) < 0.0000001);
   }
 }
