@@ -353,7 +353,10 @@ TEST(assumption, functional)
 
 TEST(assumption, lambdas)
 {
+  auto f = [&](double x, double y)->double { return x * y; };
 
+  double a = f(10.0, 20.0);
+  EXPECT_DOUBLE_EQ(200.0, a);
 }
 
 //! The defaulting holder interface
