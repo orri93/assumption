@@ -1,5 +1,6 @@
 #include "assumption.h"
 
+#include <cmath>
 #include <memory>
 #include <functional>
 
@@ -206,8 +207,9 @@ TEST(assumption, uniquearray)
   const size_t Size = 10;
 
   float* p;
+  ValueArray a, b;
 
-  ValueArray a = std::make_unique<Value[]>(Size);
+  a = std::make_unique<Value[]>(Size);
   EXPECT_TRUE((bool)a);
   ::memset(a.get(), 0, Size * sizeof(Value));
   for (size_t i = 0; i < Size; i++)
@@ -229,6 +231,50 @@ TEST(assumption, uniquearray)
   EXPECT_FLOAT_EQ(y, *p);
   p = &a[2];
   EXPECT_FLOAT_EQ(z, *p);
+
+  Value* pointer;
+  const int count = 3;
+  const size_t size = count * sizeof(float);
+  Value store[size];
+  ::memcpy(store, a.get(), size);
+
+  pointer = a.get();
+  EXPECT_FLOAT_EQ(x, *pointer);
+  Value* allocation = new Value[size];
+  ::memset(allocation, 0, size);
+  a = std::unique_ptr<Value[]>(allocation);
+  EXPECT_TRUE((bool)a);
+  // This should give access violation
+  EXPECT_FALSE(::abs(*pointer - x) < 0.00001);
+
+  ::memcpy(allocation, store, size);
+
+  pointer = a.release();
+  EXPECT_EQ(allocation, pointer);
+  
+  delete[] pointer;
+}
+
+TEST(assumption, string)
+{
+  typedef std::string::size_type Size;
+  Size find_slash;
+  std::string s;
+
+  s = "abc/def";
+
+  find_slash = s.find_last_of('/');
+  EXPECT_EQ(3, find_slash);
+
+  s = s.substr(find_slash + 1);
+  EXPECT_EQ(std::string("def"), s);
+
+  s = "abcdef/";
+  find_slash = s.find_last_of('/');
+  EXPECT_EQ(6, find_slash);
+  s = (find_slash < s.length() - 1) ? s.substr(find_slash + 1) :
+    s.substr(0, find_slash);
+  EXPECT_EQ(std::string("abcdef"), s);
 }
 
 TEST(assumption, the_void)
