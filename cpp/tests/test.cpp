@@ -1,5 +1,6 @@
 #include "assumption.h"
 
+#include <cmath>
 #include <memory>
 #include <functional>
 
@@ -211,6 +212,84 @@ TEST(assumption, unique)
   EXPECT_EQ(float(), w.value());  // Should be equal to 0.0f
 }
 
+TEST(assumption, uniquearray)
+{
+  typedef float Value;
+  typedef std::unique_ptr<Value[]> ValueArray;
+
+  const size_t Size = 10;
+
+  float* p;
+  ValueArray a, b;
+
+  a = std::make_unique<Value[]>(Size);
+  EXPECT_TRUE((bool)a);
+  ::memset(a.get(), 0, Size * sizeof(Value));
+  for (size_t i = 0; i < Size; i++)
+  {
+    EXPECT_FLOAT_EQ(Value(), a[i]);
+  }
+  
+  float x = 41.12f, y = 45.32f, z = 212.22f;
+
+  a[0] = x;
+  a[1] = y;
+  a[2] = z;
+  EXPECT_FLOAT_EQ(x, a[0]);
+  EXPECT_FLOAT_EQ(y, a[1]);
+  EXPECT_FLOAT_EQ(z, a[2]);
+  p = a.get();
+  EXPECT_FLOAT_EQ(x, *p);
+  p++;
+  EXPECT_FLOAT_EQ(y, *p);
+  p = &a[2];
+  EXPECT_FLOAT_EQ(z, *p);
+
+  Value* pointer;
+  const int count = 3;
+  const size_t size = count * sizeof(float);
+  Value store[size];
+  ::memcpy(store, a.get(), size);
+
+  pointer = a.get();
+  EXPECT_FLOAT_EQ(x, *pointer);
+  Value* allocation = new Value[size];
+  ::memset(allocation, 0, size);
+  a = std::unique_ptr<Value[]>(allocation);
+  EXPECT_TRUE((bool)a);
+  // This should give access violation
+  EXPECT_FALSE(::abs(*pointer - x) < 0.00001);
+
+  ::memcpy(allocation, store, size);
+
+  pointer = a.release();
+  EXPECT_EQ(allocation, pointer);
+  
+  delete[] pointer;
+}
+
+TEST(assumption, string)
+{
+  typedef std::string::size_type Size;
+  Size find_slash;
+  std::string s;
+
+  s = "abc/def";
+
+  find_slash = s.find_last_of('/');
+  EXPECT_EQ(3, find_slash);
+
+  s = s.substr(find_slash + 1);
+  EXPECT_EQ(std::string("def"), s);
+
+  s = "abcdef/";
+  find_slash = s.find_last_of('/');
+  EXPECT_EQ(6, find_slash);
+  s = (find_slash < s.length() - 1) ? s.substr(find_slash + 1) :
+    s.substr(0, find_slash);
+  EXPECT_EQ(std::string("abcdef"), s);
+}
+
 TEST(assumption, the_void)
 {
   typedef gos::interfaces::RawPointerHolder<void> Interface;
@@ -285,6 +364,15 @@ TEST(assumption, functional)
   EXPECT_TRUE(result);
 }
 
+TEST(assumption, lambdas)
+{
+  auto f = [&](double x, double y)->double { return x * y; };
+
+  double a = f(10.0, 20.0);
+  EXPECT_DOUBLE_EQ(200.0, a);
+}
+
+//! The defaulting holder interface
 template<typename T> class DefaultingHolder :
 public gos::interfaces::ReferencableHolder<T>
 {

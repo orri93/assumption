@@ -268,6 +268,7 @@ template<typename T> class RawPointerHolder :
 public:
   //! A type for a unique pointer
   typedef T* Pointer;
+  //! The default constructor takes a pointer as input
   RawPointerHolder(const Pointer& pointer) :
     raw_(pointer)
   {}
@@ -280,11 +281,12 @@ private:
   Pointer raw_;
 };
 
+//! The defaulting holder class
 template<typename T>
 class DefaultingHolder : public gos::interfaces::ReferencableHolder<T>
 {
 public:
-  DefaultingHolder() : Holder(T()) {}
+  DefaultingHolder() : ReferencableHolder(T()) {}
 };
 
 //! A simple constant holder class

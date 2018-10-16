@@ -21,7 +21,7 @@
   <PropertyGroup />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(AssumptionInclude);$(GoogleTestInclude);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(AssumptionInclude);$(GoogleTestInclude);$(BoostInclude);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>$(GoogleTestLibrary);$(GoogleTestMainLibrary);$(GoogleMockLibrary);$(GoogleMockMainLibrary);%(AdditionalDependencies)</AdditionalDependencies>

@@ -25,5 +25,5 @@ echo "Build the project"
 make
 
 echo "Execute the thest"
-./cpp/tests/assumption_tests > assumption_tests.log
+./cpp/tests/assumption_tests -gtest_output=xml:assumption_tests.xml
 
