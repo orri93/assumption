@@ -7,6 +7,19 @@
 #define _GOS_ASSUMPTION_TEST_EXPECTED_FLOAT_SIZE 4
 #define _GOS_ASSUMPTION_TEST_EXPECTED_DOUBLE_SIZE 8
 
+TEST(assumption, operators)
+{
+  int a, b;
+  a = 10;
+
+  b = ++a;
+  EXPECT_EQ(11, a);
+  EXPECT_EQ(11, b);
+  b = a++;
+  EXPECT_EQ(12, a);
+  EXPECT_EQ(11, b);
+}
+
 TEST(assumption, size)
 {
   size_t boolsize = sizeof(bool);
