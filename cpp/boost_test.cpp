@@ -3,6 +3,7 @@
 #include <vector>
 #include <cmath>
 
+#include <boost/asio.hpp>
 #include <boost/spirit/home/support/detail/endian.hpp>
 #include <boost/spirit/include/qi_binary.hpp>
 #include <boost/asio/buffer.hpp>
@@ -119,7 +120,6 @@ TEST(boost_assumption, spirit_endian)
   }
 }
 
-
 TEST(boost_assumption, spirit_qi_binary)
 {
   const size_t Size = 8;
@@ -207,3 +207,9 @@ TEST(boost_assumption, spirit_qi_binary)
   //  floats);
 }
 
+TEST(boost_assumption, udp)
+{
+  boost::asio::io_service service;
+
+  boost::asio::ip::udp::resolver resolver(service);
+}
