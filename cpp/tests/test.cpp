@@ -3,6 +3,7 @@
 #include <cmath>
 #include <memory>
 #include <functional>
+#include <chrono>
 
 #define _GOS_ASSUMPTION_TEST_EXPECTED_BOOL_SIZE 1
 #define _GOS_ASSUMPTION_TEST_EXPECTED_FLOAT_SIZE 4
@@ -158,7 +159,14 @@ TEST(assumption, unique)
 
   const char* const Text = "Text";
   StringUniquePtr first, second, fourth;
+  EXPECT_FALSE((bool)first);
+  first.reset(nullptr);
+  EXPECT_FALSE((bool)first);
   StringHolderInterfacePtr third;
+  first = std::make_unique<StringHolder>(Text);
+  EXPECT_TRUE(first);
+  EXPECT_FALSE(second);
+  // Expect no problem if a recreate
   first = std::make_unique<StringHolder>(Text);
   EXPECT_TRUE(first);
   EXPECT_FALSE(second);
@@ -175,7 +183,7 @@ TEST(assumption, unique)
   third = nullptr;
   EXPECT_TRUE(fourth);
   EXPECT_EQ(std::string(Text), fourth->text());
-  fourth.reset();
+  fourth.reset(nullptr);
   EXPECT_FALSE(fourth);
   EXPECT_EQ(nullptr, third);
 
@@ -266,6 +274,55 @@ TEST(assumption, uniquearray)
   EXPECT_EQ(allocation, pointer);
   
   delete[] pointer;
+}
+
+TEST(assumption, uniquearrayofunique)
+{
+  typedef float Value;
+  typedef std::unique_ptr<Value> Item;
+  typedef std::unique_ptr<Item[]> ItemArray;
+
+  const size_t Size = 10;
+
+  ItemArray a;
+
+  a = std::make_unique<Item[]>(Size);
+  EXPECT_TRUE((bool)a);
+  for (size_t i = 0; i < Size; i++)
+  {
+    EXPECT_FALSE((bool)(a[i]));
+    Value* v = (a[i]).get();
+    EXPECT_EQ(nullptr, v);
+  }
+
+  for (size_t i = 0; i < Size; i++)
+  {
+    EXPECT_FALSE((bool)(a[i]));
+    a[i] = std::make_unique<Value>(((Value)(i)) + ((Value)(i)) / Value(10));
+  }
+
+  for (size_t i = 0; i < Size; i++)
+  {
+    EXPECT_TRUE((bool)(a[i]));
+    Value& v = *(a[i]);
+    EXPECT_FLOAT_EQ(((Value)(i)) + ((Value)(i)) / Value(10), v);
+    *(a[i]) = ((Value)(i * 10)) + ((Value)(i)) / Value(10);
+  }
+
+  for (size_t i = 0; i < Size; i++)
+  {
+    EXPECT_TRUE((bool)(a[i]));
+    Value& v = *(a[i]);
+    EXPECT_FLOAT_EQ(((Value)(i * 10)) + ((Value)(i)) / Value(10), v);
+  }
+  for (size_t i = 0; i < Size; i++)
+  {
+    EXPECT_TRUE((bool)(a[i]));
+    (a[i]).reset(nullptr);
+    EXPECT_FALSE((bool)(a[i]));
+    Value* v = (a[i]).get();
+    EXPECT_EQ(nullptr, v);
+  }
 }
 
 TEST(assumption, string)
@@ -409,4 +466,47 @@ TEST(assumption, null)
   EXPECT_DOUBLE_EQ(Double(), w.value());
   EXPECT_EQ(DoubleWrapper(), w);
 
+}
+
+TEST(assumption, chrono)
+{
+  typedef std::chrono::steady_clock Clock;
+  typedef Clock::time_point Time;
+  typedef Clock::duration Duration;
+  Clock clock;
+  Time time;
+  EXPECT_TRUE(time == Time());
+  if (time == Time())
+  {
+    time = clock.now();
+  }
+  EXPECT_TRUE(time != Time());
+  Time now = clock.now();
+  Duration duration = now - time;
+  int ms =
+    std::chrono::duration_cast<std::chrono::microseconds>(duration).count();
+}
+
+struct Data
+{
+  std::string A;
+};
+
+struct UniquePtrStruct
+{
+  typedef std::unique_ptr<Data> DataPtr;
+
+  UniquePtrStruct(DataPtr& ptr) : Ptr(std::move(ptr)) {}
+
+  DataPtr Ptr;
+};
+
+TEST(assumption, unique_ptr_struct)
+{
+  UniquePtrStruct::DataPtr data = std::make_unique<Data>();
+  EXPECT_TRUE((bool)data);
+  data->A = "Hello";
+  UniquePtrStruct dataptr(data);
+  EXPECT_TRUE((bool)dataptr.Ptr);
+  EXPECT_FALSE((bool)data);
 }

@@ -3,7 +3,8 @@
 #include <vector>
 #include <cmath>
 
-#include <boost/asio.hpp>
+//#include <boost/asio.hpp>
+#include <boost/optional.hpp>
 #include <boost/spirit/home/support/detail/endian.hpp>
 #include <boost/spirit/include/qi_binary.hpp>
 #include <boost/asio/buffer.hpp>
@@ -46,6 +47,23 @@ void* load_big_endian_array(const void* pointer, float* values, size_t count)
     values++;
   }
   return (void*)local;
+}
+
+TEST(boost_assumption, optional)
+{
+  typedef boost::optional<bool> optional_boolean;
+  
+  optional_boolean oba;
+  EXPECT_TRUE(!oba.is_initialized());
+  oba.emplace(true);
+  EXPECT_TRUE(oba.is_initialized());
+
+  optional_boolean obb(true);
+  EXPECT_TRUE(obb.is_initialized());
+  obb = boost::none;
+  EXPECT_TRUE(!obb.is_initialized());
+  obb = true;
+  EXPECT_TRUE(obb.is_initialized());
 }
 
 TEST(boost_assumption, spirit_endian)
@@ -209,7 +227,7 @@ TEST(boost_assumption, spirit_qi_binary)
 
 TEST(boost_assumption, udp)
 {
-  boost::asio::io_service service;
+  //boost::asio::io_service service;
 
-  boost::asio::ip::udp::resolver resolver(service);
+  //boost::asio::ip::udp::resolver resolver(service);
 }
