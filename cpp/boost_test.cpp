@@ -8,6 +8,7 @@
 #include <boost/spirit/home/support/detail/endian.hpp>
 #include <boost/spirit/include/qi_binary.hpp>
 #include <boost/asio/buffer.hpp>
+#include <boost/sml.hpp>
 
 namespace detail = boost::spirit::detail;
 namespace endian = boost::spirit::endian;
