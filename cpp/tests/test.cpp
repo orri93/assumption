@@ -481,7 +481,7 @@ TEST(assumption, chrono)
     time = clock.now();
   }
   EXPECT_TRUE(time != Time());
-  Time now = clock.now();
+  Time now = Clock::now();
   Duration duration = now - time;
   int ms =
     std::chrono::duration_cast<std::chrono::microseconds>(duration).count();
@@ -509,4 +509,20 @@ TEST(assumption, unique_ptr_struct)
   UniquePtrStruct dataptr(data);
   EXPECT_TRUE((bool)dataptr.Ptr);
   EXPECT_FALSE((bool)data);
+}
+
+TEST(assumption, floating_point)
+{
+  double floating = 9;
+
+  double a = 0.0;
+  float b = 0.0f;
+
+  double test = a / b;
+
+  double sub = DBL_MIN / 60.0;
+
+  EXPECT_TRUE(::isfinite(sub));
+
+  std::cout << sub << std::endl;
 }

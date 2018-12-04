@@ -1,5 +1,8 @@
 #include "assumption.h"
 
+// Moved to the project file
+// #define BOOST_MPL_LIMIT_VECTOR_SIZE 30 // or whatever you need    
+
 #include <vector>
 #include <cmath>
 
@@ -8,7 +11,8 @@
 #include <boost/spirit/home/support/detail/endian.hpp>
 #include <boost/spirit/include/qi_binary.hpp>
 #include <boost/asio/buffer.hpp>
-#include <boost/sml.hpp>
+
+#include <assumption.h>
 
 namespace detail = boost::spirit::detail;
 namespace endian = boost::spirit::endian;
@@ -231,4 +235,25 @@ TEST(boost_assumption, udp)
   //boost::asio::io_service service;
 
   //boost::asio::ip::udp::resolver resolver(service);
+}
+
+namespace gas = ::gos::assumption::state_machine_boost_msm;
+namespace events = ::gos::assumption::state_machine_boost_msm::events;
+
+TEST(boost_assumption, msm_and_mpl)
+{
+  gas::StateEngine engine;
+  engine.start();
+  gas::visitors::SomeVisitor visitor;
+  gas::Stage state = gas::Stage::Undefined;
+  engine.visit_current_states(::boost::ref(visitor), state);
+
+  gas::Stage stage_for_started;
+  events::Started started(__FILE__, __LINE__, stage_for_started);
+
+  engine.process_event<events::Started>(started);
+  EXPECT_TRUE(visitor.GetLastState() == gas::Stage::Starting);
+
+
+  ::std::cout << "leaving";
 }
