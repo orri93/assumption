@@ -5,8 +5,13 @@ public class GroupA extends Group {
 
   private ItemA item;
   
-  public GroupA(ItemA item) {
-    super.setType(Type.A);
+  public GroupA() {
+  	super(Type.A);
+  	this.item = null;
+  }
+  
+  public GroupA(String id, ItemA item) {
+    super(Type.A, id);
     this.item = item;
   }
 

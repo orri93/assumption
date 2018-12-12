@@ -5,11 +5,15 @@ public class GroupB extends Group {
 
   private ItemB item;
   
-  public GroupB(ItemB item) {
-    super.setType(Type.B);
+  public GroupB() {
+  	super(Type.B);
+  	this.item = null;
+  }
+  
+  public GroupB(String id, ItemB item) {
+    super(Type.B, id);
     this.item = item;
   }
-
 
 	public ItemB getItem() {
 		return item;
