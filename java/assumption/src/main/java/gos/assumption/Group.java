@@ -1,7 +1,11 @@
 package gos.assumption;
 
-public class Group {
-	private Type type;
+import java.io.Serializable;
+
+public class Group implements Serializable {
+  private static final long serialVersionUID = -7961726924232057999L;
+  
+  private Type type;
 
 	public Type getType() {
 		return type;

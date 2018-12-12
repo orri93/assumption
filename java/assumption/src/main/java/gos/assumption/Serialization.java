@@ -1,9 +1,9 @@
 package gos.assumption;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.util.Scanner;
 
 public class Serialization {
 	public void Serialize(Group group, OutputStream stream) throws Exception {
@@ -32,6 +32,15 @@ public class Serialization {
 	}
 	
 	public Group Deserialize(InputStream stream) throws Exception {
+	  Type type = DeserializeType(stream);
 		return null;
 	}
+	
+	  private Type DeserializeType(InputStream stream) {
+	    Scanner scanner = new Scanner(stream);
+	    scanner.useDelimiter("Type");
+	    String result = scanner.next();
+	    return null;
+	  }
+
 }
