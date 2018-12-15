@@ -11,6 +11,8 @@
 #include <boost/spirit/home/support/detail/endian.hpp>
 #include <boost/spirit/include/qi_binary.hpp>
 #include <boost/asio/buffer.hpp>
+#include <boost/asio.hpp>
+#include <boost/bind.hpp>
 
 #include <assumption.h>
 
@@ -254,6 +256,32 @@ TEST(boost_assumption, msm_and_mpl)
   engine.process_event<events::Started>(started);
   EXPECT_TRUE(visitor.GetLastState() == gas::Stage::Starting);
 
-
   ::std::cout << "leaving";
+}
+
+void print(const boost::system::error_code& /*e*/,
+  boost::asio::steady_timer* t, int* count)
+{
+  if (*count < 5)
+  {
+    std::cout << *count << std::endl;
+    ++(*count);
+
+    t->expires_at(t->expiry() + boost::asio::chrono::seconds(1));
+    t->async_wait(boost::bind(print,
+      boost::asio::placeholders::error, t, count));
+  }
+}
+
+TEST(boost_assumption, timer)
+{
+  boost::asio::io_context io;
+
+  int count = 0;
+  int data[1024];
+  boost::asio::steady_timer t(io, boost::asio::chrono::seconds(1));
+  t.async_wait(boost::bind(print,
+    boost::asio::placeholders::error, &t, &count));
+
+  io.run();
 }

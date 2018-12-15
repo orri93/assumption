@@ -1,6 +1,8 @@
 #ifndef _GOS_ASSUMPTION_H_
 #define _GOS_ASSUMPTION_H_
 
+#include <boost/asio.hpp>
+
 #ifdef _WIN32
 #include <SDKDDKVer.h>
 #include <stdio.h>
