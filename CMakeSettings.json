@@ -1,0 +1,37 @@
+﻿{
+  "configurations": [
+    {
+      "name": "x64-Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "buildRoot": "${projectDir}\\out\\build\\${name}",
+      "installRoot": "${projectDir}\\out\\install\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "BUILD_DOC",
+          "value": "False",
+          "type": "BOOL"
+        },
+        {
+          "name": "GOS_ASSUMPTION_BOOST_STATE_MACHINE",
+          "value": "False",
+          "type": "BOOL"
+        },
+        {
+          "name": "INSTALL_GTEST",
+          "value": "False",
+          "type": "BOOL"
+        },
+        {
+          "name": "gtest_force_shared_crt",
+          "value": "True",
+          "type": "BOOL"
+        }
+      ]
+    }
+  ]
+}

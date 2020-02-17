@@ -1,51 +1,109 @@
-project(assumption_tests)
+cmake_minimum_required(VERSION 3.8.2)
 
-include_directories("../include")
+project(AssumptionCppTests
+  VERSION 1.0
+  DESCRIPTION "Assumption C++ Test Project"
+  LANGUAGES CXX)
 
-include(CTest)
+option(BUILD_BOOST_TEST
+  "Build boost dependent tests" ON)
+option(GOS_ASSUMPTION_COUT
+  "Assumption print to out" OFF)
+option(GOS_ASSUMPTION_SET_CHECK_WITH_VARIABLE
+  "Assumption set check with variable" ON)
+option(GOS_ASSUMPTION_SET_CHECK_FROM_DEFAULT
+  "Assumption set check from default" OFF)
+option(GOS_ASSUMPTION_COMPARE_WITH_FRIEND
+  "Assumption compare with friend" ON)
+option(GOS_ASSUMPTION_CXX_14_STANDARD
+  "Assumption C++ 14 standard" OFF)
 
-if (CMAKE_VERSION VERSION_LESS 3.2)
-    set(UPDATE_DISCONNECTED_IF_AVAILABLE "")
-else()
-    set(UPDATE_DISCONNECTED_IF_AVAILABLE "UPDATE_DISCONNECTED 1")
-endif()
+option(GOS_ASSUMPTION_BOOST_STATE_MACHINE
+  "Assumption Boost State Machine" OFF)
 
-include(DownloadProject.cmake)
-download_project(PROJ                googletest
-                 GIT_REPOSITORY      https://github.com/google/googletest.git
-#                 GIT_TAG             master
-                 GIT_TAG             release-1.6.0
-                 ${UPDATE_DISCONNECTED_IF_AVAILABLE}
-)
+list(APPEND assumptioncpptests_source "general.cpp")
+list(APPEND assumptioncpptests_libraries
+  gtest
+  gmock_main)
 
-# Prevent GoogleTest from overriding our compiler/linker options
-# when building with Visual Studio
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+if (BUILD_BOOST_TEST)
+  #find_package(Boost 1.71 COMPONENTS headers)
+  # Find Boost headers only
+  find_package(Boost)
+  if (Boost_FOUND)
+    message(STATUS "Boost headers where found so adding boost tests.")
+    list(APPEND assumption_cpp_include ${Boost_INCLUDE_DIRS})
+    list(APPEND assumptioncpptests_source "boost.cpp")
+  else ()
+    message(WARNING "Boost needs to be installed to build the boost tests.")
+  endif ()
+  find_package(Boost OPTIONAL_COMPONENTS
+    date_time
+    system
+    regex)
+  if (Boost_SYSTEM_FOUND)
+    list(APPEND assumptioncpptests_libraries
+      Boost::date_time
+      Boost::regex)
+    message(STATUS "Boost system where found so adding boost tests.")    
+  else ()
+    message(WARNING "Boost system needs to be installed to build the boost tests.")
+  endif ()
+endif ()
 
-add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
+add_executable(assumptioncpptests ${assumptioncpptests_source})
 
-# When using CMake 2.8.11 or later, header path dependencies
-# are automatically added to the gtest and gmock targets.
-# For earlier CMake versions, we have to explicitly add the
-# required directories to the header search path ourselves.
-if (CMAKE_VERSION VERSION_LESS 2.8.11)
-    include_directories("${gtest_SOURCE_DIR}/include"
-                        "${gmock_SOURCE_DIR}/include")
-endif()
+if (Boost_FOUND)
+  target_compile_definitions(assumptioncpptests PUBLIC 
+    _GOS_ASSUMPTION_BOOST_HEADER_)
+endif ()
 
+if (Boost_SYSTEM_FOUND)
+  target_compile_definitions(assumptioncpptests PUBLIC 
+    _GOS_ASSUMPTION_BOOST_SYSTEM_)
+endif ()
 
-# Trivial example using gtest and gmock
-add_executable(assumption_tests test.cpp)
+if (GOS_ASSUMPTION_COUT)
+  target_compile_definitions(assumptioncpptests PUBLIC
+    _GOS_ASSUMPTION_COUT_)
+endif ()
 
-set_target_properties(assumption_tests PROPERTIES
-  CXX_STANDARD 14
-  CXX_STANDARD_REQUIRED YES
-  CXX_EXTENSIONS NO
-)
+if (GOS_ASSUMPTION_SET_CHECK_WITH_VARIABLE)
+  target_compile_definitions(assumptioncpptests PUBLIC 
+    _GOS_ASSUMPTION_SET_CHECK_WITH_VARIABLE_)
+endif ()
 
-target_link_libraries(assumption_tests gtest gmock_main)
-add_test(NAME assumption_tests_test COMMAND assumption_tests)
+if (GOS_ASSUMPTION_SET_CHECK_FROM_DEFAULT)
+  target_compile_definitions(assumptioncpptests PUBLIC 
+    _GOS_ASSUMPTION_SET_CHECK_FROM_DEFAULT_)
+endif ()
 
+if (GOS_ASSUMPTION_COMPARE_WITH_FRIEND)
+  target_compile_definitions(assumptioncpptests PUBLIC 
+    _GOS_ASSUMPTION_COMPARE_WITH_FRIEND_)
+endif ()
 
+if (GOS_ASSUMPTION_BOOST_STATE_MACHINE)
+  target_compile_definitions(assumptioncpptests PUBLIC 
+    _GOS_ASSUMPTION_BOOST_STATE_MACHINE_)
+  target_compile_definitions(assumptioncpptests PUBLIC
+    BOOST_MPL_LIMIT_VECTOR_SIZE=32)
+endif ()
 
-#target_link_libraries(${CMAKE_PROJECT_NAME}_run ${CMAKE_PROJECT_NAME}_lib)
+target_include_directories(assumptioncpptests PUBLIC ${assumption_cpp_include})
+
+if (GOS_ASSUMPTION_CXX_14_STANDARD)
+  set_target_properties(assumptioncpptests PROPERTIES
+    CXX_STANDARD 14
+    CXX_STANDARD_REQUIRED YES
+    CXX_EXTENSIONS NO)
+else ()
+  set_target_properties(assumptioncpptests PROPERTIES
+    CXX_STANDARD 11
+    CXX_STANDARD_REQUIRED YES
+    CXX_EXTENSIONS NO)
+endif ()
+
+target_link_libraries(assumptioncpptests ${assumptioncpptests_libraries})
+
+add_test(NAME AssumptionCppTest COMMAND assumptioncpptests)

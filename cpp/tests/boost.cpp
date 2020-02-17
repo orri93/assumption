@@ -1,24 +1,40 @@
-#include "assumption.h"
-
-// Moved to the project file
-// #define BOOST_MPL_LIMIT_VECTOR_SIZE 30 // or whatever you need    
-
-#include <vector>
 #include <cmath>
 
-//#include <boost/asio.hpp>
+#include <vector>
+
+#ifdef _GOS_ASSUMPTION_BOOST_SYSTEM_
+#include <boost/asio.hpp>
+
+#ifdef _WIN32
+#include <SDKDDKVer.h>
+#include <tchar.h>
+#include <Windows.h>
+#endif
+#endif
+
 #include <boost/optional.hpp>
+
+#ifdef _GOS_ASSUMPTION_BOOST_SYSTEM_
 #include <boost/spirit/home/support/detail/endian.hpp>
 #include <boost/spirit/include/qi_binary.hpp>
 #include <boost/asio/buffer.hpp>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
+#endif
 
-#include <assumption.h>
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
-namespace detail = boost::spirit::detail;
-namespace endian = boost::spirit::endian;
+#include <gos/assumption/boost.h>
+#include <gos/assumption.h>
 
+
+#ifdef _GOS_ASSUMPTION_BOOST_SYSTEM_
+namespace detail = ::boost::spirit::detail;
+namespace endian = ::boost::spirit::endian;
+#endif
+
+#ifdef _GOS_ASSUMPTION_BOOST_SYSTEM_
 void* store_big_endian_array(void* pointer, const float* values, size_t count)
 {
   char* local = (char*)pointer;
@@ -29,7 +45,9 @@ void* store_big_endian_array(void* pointer, const float* values, size_t count)
   }
   return (void*)local;
 }
+#endif
 
+#ifdef _GOS_ASSUMPTION_BOOST_SYSTEM_
 void* load_little_endian_array(const void* pointer, float* values, size_t count)
 {
   char* local = (char*)pointer;
@@ -42,7 +60,9 @@ void* load_little_endian_array(const void* pointer, float* values, size_t count)
   }
   return (void*)local;
 }
+#endif
 
+#ifdef _GOS_ASSUMPTION_BOOST_SYSTEM_
 void* load_big_endian_array(const void* pointer, float* values, size_t count)
 {
   char* local = (char*)pointer;
@@ -55,10 +75,11 @@ void* load_big_endian_array(const void* pointer, float* values, size_t count)
   }
   return (void*)local;
 }
+#endif
 
 TEST(boost_assumption, optional)
 {
-  typedef boost::optional<bool> optional_boolean;
+  typedef ::boost::optional<bool> optional_boolean;
   
   optional_boolean oba;
   EXPECT_TRUE(!oba.is_initialized());
@@ -73,6 +94,7 @@ TEST(boost_assumption, optional)
   EXPECT_TRUE(obb.is_initialized());
 }
 
+#ifdef _GOS_ASSUMPTION_BOOST_SYSTEM_
 TEST(boost_assumption, spirit_endian)
 {
   typedef std::unique_ptr<char[]> Buffer;
@@ -144,7 +166,9 @@ TEST(boost_assumption, spirit_endian)
     EXPECT_TRUE(::abs(loaded[i] - a[i]) < 0.0000001);
   }
 }
+#endif
 
+#ifdef _GOS_ASSUMPTION_BOOST_SYSTEM_
 TEST(boost_assumption, spirit_qi_binary)
 {
   const size_t Size = 8;
@@ -231,6 +255,7 @@ TEST(boost_assumption, spirit_qi_binary)
   //  boost::spirit::little_bin_float,
   //  floats);
 }
+#endif
 
 TEST(boost_assumption, udp)
 {
@@ -239,9 +264,12 @@ TEST(boost_assumption, udp)
   //boost::asio::ip::udp::resolver resolver(service);
 }
 
+#ifdef _GOS_ASSUMPTION_BOOST_STATE_MACHINE_
 namespace gas = ::gos::assumption::state_machine_boost_msm;
 namespace events = ::gos::assumption::state_machine_boost_msm::events;
+#endif
 
+#ifdef _GOS_ASSUMPTION_BOOST_STATE_MACHINE_
 TEST(boost_assumption, msm_and_mpl)
 {
   gas::StateEngine engine;
@@ -258,7 +286,9 @@ TEST(boost_assumption, msm_and_mpl)
 
   ::std::cout << "leaving";
 }
+#endif
 
+#ifdef _GOS_ASSUMPTION_BOOST_SYSTEM_
 void print(const boost::system::error_code& /*e*/,
   boost::asio::steady_timer* t, int* count)
 {
@@ -272,7 +302,9 @@ void print(const boost::system::error_code& /*e*/,
       boost::asio::placeholders::error, t, count));
   }
 }
+#endif
 
+#ifdef _GOS_ASSUMPTION_BOOST_SYSTEM_
 TEST(boost_assumption, timer)
 {
   boost::asio::io_context io;
@@ -285,3 +317,4 @@ TEST(boost_assumption, timer)
 
   io.run();
 }
+#endif
