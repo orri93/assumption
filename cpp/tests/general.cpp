@@ -2,7 +2,10 @@
 
 #include <memory>
 #include <functional>
+#include <codecvt>
 #include <chrono>
+#include <locale>
+#include <string>
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -529,4 +532,82 @@ TEST(assumption, floating_point)
   EXPECT_TRUE(::isfinite(sub));
 
   std::cout << sub << std::endl;
+}
+
+#define ADDUMPTION_NORMAL_TEXT "orri"
+#define ADDUMPTION_FUNNY_TEXT "rad/min²"
+
+static size_t asciitoutf8(char* destination, const char* source, const int& size) {
+  size_t maxsize = size / 2;
+  for (size_t i = 0; i < maxsize; ++i) {
+    char ch = *source;
+    unsigned int ich = static_cast<unsigned int>(ch);
+    uint8_t u8 = static_cast<uint8_t>(ch);
+    switch (u8) {
+    case 0x00:
+      *destination = '\0';
+      return i;
+    case 0xb2:
+      *destination = 0xc2;
+      destination++;
+      *destination = *source;
+      break;
+    default:
+      *destination = *source;
+      break;
+    }
+    destination++;
+    source++;
+  }
+}
+
+TEST(assumption, wide)
+{
+  std::wstring wtext;
+  bool exception = false;
+  size_t normal_text_size = sizeof(ADDUMPTION_NORMAL_TEXT);
+  EXPECT_EQ(5, normal_text_size);
+
+  size_t funny_text_size = sizeof(ADDUMPTION_FUNNY_TEXT);
+  EXPECT_EQ(9, funny_text_size);
+  try {
+
+    const char funny_asci[] = { 0x6d, 0x69, 0x6e, 0xb2, 0x00 };
+    const char funny_utf8[] = { 0x6d, 0x69, 0x6e, 0xc2, 0xb2, 0x00 };
+
+    std::string funny_string_ascii = funny_asci;
+
+    std::wstring funny_string_wstring;
+    funny_string_wstring.assign(
+      funny_string_ascii.begin(),
+      funny_string_ascii.end());
+
+    size_t size = funny_string_ascii.size();
+    size_t maxsize = (size + 1) * 2;
+    std::unique_ptr<char[]> buffer = std::make_unique<char[]>(maxsize);
+    const char* cstrbuffer = funny_string_ascii.c_str();
+    size_t csize = asciitoutf8(buffer.get(), cstrbuffer, maxsize);
+
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> convert1;
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> convert2;
+
+    wtext = convert1.from_bytes(ADDUMPTION_NORMAL_TEXT);
+    wtext = convert2.from_bytes(ADDUMPTION_NORMAL_TEXT);
+    
+    wtext = convert1.from_bytes(funny_utf8);
+    wtext = convert2.from_bytes(funny_utf8);
+
+    wtext = convert1.from_bytes(buffer.get());
+
+    wtext = convert1.from_bytes(funny_asci);
+    wtext = convert2.from_bytes(funny_asci);
+    wtext = convert1.from_bytes(ADDUMPTION_FUNNY_TEXT);
+    wtext = convert2.from_bytes(ADDUMPTION_FUNNY_TEXT);
+
+  } catch (const std::range_error& ex) {
+    exception = true;
+  } catch (const std::exception& ex) {
+    exception = true;
+  }
+  EXPECT_FALSE(exception);
 }
