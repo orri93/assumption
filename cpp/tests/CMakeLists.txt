@@ -60,18 +60,6 @@ endif ()
 target_include_directories(${assumption_cpp_tests_target} PUBLIC
   ${assumption_cpp_tests_include})
 
-if (GOS_ASSUMPTION_CXX_14_STANDARD)
-  set_target_properties(${assumption_cpp_tests_target} PROPERTIES
-    CXX_STANDARD 14
-    CXX_STANDARD_REQUIRED YES
-    CXX_EXTENSIONS NO)
-else ()
-  set_target_properties(${assumption_cpp_tests_target} PROPERTIES
-    CXX_STANDARD 11
-    CXX_STANDARD_REQUIRED YES
-    CXX_EXTENSIONS NO)
-endif ()
-
 target_link_libraries(${assumption_cpp_tests_target}
   ${assumption_cpp_tests_libraries})
 

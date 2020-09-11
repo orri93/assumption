@@ -15,8 +15,6 @@ option(GOS_ASSUMPTION_SET_CHECK_FROM_DEFAULT
   "Assumption set check from default" OFF)
 option(GOS_ASSUMPTION_COMPARE_WITH_FRIEND
   "Assumption compare with friend" ON)
-option(GOS_ASSUMPTION_CXX_14_STANDARD
-  "Assumption C++ 14 standard" OFF)
 
 option(GOS_ASSUMPTION_BOOST_STATE_MACHINE
   "Assumption Boost State Machine" OFF)

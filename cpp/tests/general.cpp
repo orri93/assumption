@@ -419,12 +419,12 @@ TEST(assumption, functional)
 
   CreateUnique(assumption, assumptionarray, wrapperarray, holder);
 
-  auto bind = std::bind(
+  std::function<bool(const FloatWrapperHolderAssumption::Id&)> b = std::bind(
     &FloatWrapperHolderAssumption::has,
     &assumption,
     std::placeholders::_1
     );
-  auto result = bind(assumption.UniqueId);
+  auto result = b(assumption.UniqueId);
   EXPECT_TRUE(result);
 }
 
