@@ -21,6 +21,10 @@ option(GOS_ASSUMPTION_CXX_14_STANDARD
 option(GOS_ASSUMPTION_BOOST_STATE_MACHINE
   "Assumption Boost State Machine" OFF)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 list(APPEND assumptioncpptests_source "general.cpp")
 list(APPEND assumptioncpptests_libraries
   gtest
@@ -52,6 +56,12 @@ if (BUILD_BOOST_TEST)
 endif ()
 
 add_executable(assumptioncpptests ${assumptioncpptests_source})
+
+set_target_properties(assumptioncpptests
+  PROPERTIES
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED YES
+    CXX_EXTENSIONS NO)
 
 if (Boost_FOUND)
   target_compile_definitions(assumptioncpptests PUBLIC 
@@ -91,18 +101,6 @@ if (GOS_ASSUMPTION_BOOST_STATE_MACHINE)
 endif ()
 
 target_include_directories(assumptioncpptests PUBLIC ${assumption_cpp_include})
-
-if (GOS_ASSUMPTION_CXX_14_STANDARD)
-  set_target_properties(assumptioncpptests PROPERTIES
-    CXX_STANDARD 14
-    CXX_STANDARD_REQUIRED YES
-    CXX_EXTENSIONS NO)
-else ()
-  set_target_properties(assumptioncpptests PROPERTIES
-    CXX_STANDARD 11
-    CXX_STANDARD_REQUIRED YES
-    CXX_EXTENSIONS NO)
-endif ()
 
 target_link_libraries(assumptioncpptests ${assumptioncpptests_libraries})
 
