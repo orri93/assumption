@@ -89,4 +89,5 @@ list(APPEND gos_assumption_google_test_libraries
 
 enable_testing()
 
+add_subdirectory(c)
 add_subdirectory(cpp)

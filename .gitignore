@@ -6,6 +6,7 @@ packages/
 Testing/
 out/
 x64/
+obj/
 *.v12.suo
 *.opensdf
 *.log
